@@ -28,19 +28,20 @@ module.exports = {
     },
 
     // update
-    update: (req, res) => {
-        let index = null
-        messages.forEach((message, i) => {
-            if(message.id === Number(req.params.id)) index = i
-            
-            message[index] = {
-                id: messages[index].id,
-                text: req.body.title || messages[index].text,
-                time: req.body.author || messages[index].time
-            }
-        })
-        res.status(200).send(messages)
-    },
+    update: ( req, res ) => {
+        const { text } = req.body;
+        const updateID = req.params.id;
+        const messageIndex = messages.findIndex( message => message.id == updateID );
+        let message = messages[ messageIndex ];
+    
+        messages[ messageIndex ] = {
+          id: message.id,
+          text: text || message.text,
+          time: message.time
+        };
+    
+        res.status(200).send( messages );
+      },
 
     // delete
     delete: (req, res) => {

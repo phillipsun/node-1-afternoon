@@ -1,23 +1,18 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-//require the messages controller
-const messagesController = require( __dirname + '/controllers/messages_controller');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mc = require( __dirname + '/controllers/messages_controller');
 
 const app = express();
 
-app.use(bodyParser.json())
+app.use( bodyParser.json() );
+// Use express.static to serve the public/build folder
+app.use( express.static( __dirname + '/../public/build' ) );
 
-const messagesBaseUrl = "/api/messages"
+const messagesBaseUrl = "/api/messages";
+app.post( messagesBaseUrl, mc.create );
+app.get( messagesBaseUrl, mc.read );
+app.put( `${messagesBaseUrl}/:id`, mc.update );
+app.delete( `${messagesBaseUrl}/:id`, mc.delete );
 
-// post, get, put, delete endpoints using methods from the messageController
-app.post(messagesBaseUrl, messagesController.create)
-app.get(messagesBaseUrl, messagesController.read)
-app.put(`${messagesBaseUrl}/:id`, messagesController.update)
-app.delete(`${messagesBaseUrl}/:id`, messagesController.delete)
-
-
-
-//const port = 3000
-app.listen(3000 /*port*/, () => {
-    console.log('Listening on 3000')
-})
+const port = 3000;
+app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
